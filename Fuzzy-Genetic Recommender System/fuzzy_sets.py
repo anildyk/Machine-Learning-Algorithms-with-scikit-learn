@@ -1,3 +1,7 @@
+#Implementing fuzzy_sets :
+#Age having 3 fields: young(), middle(), and old()
+#GIM having 6 fields: very_bad(), bad(), average(), good(), vaey_good(), ecxellent()
+#Please read each function from paper to understand implementation.
 class Age:
     def young(self, age):
         if age < 20:
@@ -27,7 +31,7 @@ class Age:
 class GIM:
 
 	def very_bad(self, gim):
-		if gim <= 1:
+		if gim <= 1.0:
 			return 1.0
 		else:
 			return 0.0
@@ -50,9 +54,8 @@ class GIM:
 		return self.gim_a(gim, 5)
 
 	def excellent(self, gim):
-		if x <=4:
+		if gim <=4.0:
 			return 0.0
 		else:
-			return (x-4.0)
-
+			return (gim-4.0)
 
