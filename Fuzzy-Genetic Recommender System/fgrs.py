@@ -37,7 +37,15 @@ user_tops = np.array([users_top])
 #GIM = Genre Interestingness Measure
 #Use young(), middle(), old() of Age class
 #Use very_bad(), bad(), average(), good(), very_good(), excellent() of GIM class
+#Make an object of Age and GIM classes
 a = Age()
 g = GIM()
-print g.very_bad(3), g.bad(3), g.average(4)
-print a.young(23) a.middle(23), a.old(45)
+#Examples of Age and GIM fuzzy sets
+print 'GIM Example for value gim = 3.5:', g.very_bad(3.5), g.bad(3.5), g.average(3.5), g.good(3.5), g.very_good(3.5), g.excellent(3.5) 
+x = []
+y = []
+x =  [a.young(23), a.middle(23), a.old(23)]
+y = [a.young(18), a.middle(18), a.old(18)]
+print "Examples of Fuzzy sets of Age: ", x, y
+#Example of fuzzy distance between two age 18 and 23 and their fuzzy sets
+print "Fuzzty distance between Age 18 and 23: ", fuzzy_dist(23, 18, np.array(x), np.array(y))
