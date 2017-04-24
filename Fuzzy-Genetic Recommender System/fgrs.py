@@ -27,18 +27,40 @@ items = pd.read_csv('ml-100k/u.item', sep='|', names=i_cols,
 #Most rated movies (497 movies having # of movies rared >= 60)
 most_rated = ratings.groupby('movie_id').size().sort_values(ascending=False)[:497]  
 
+#All in one DataFrame
+df1 = pd.merge(users, ratings, on='user_id')
+df = pd.merge(df1, items, on='movie_id')
+
+#Most rated movies till movies having ratings > 60
+most_rated_movies = df.groupby('movie_title').size().sort_values(ascending=False)[:497]
 #Extract users those have rated most_rated movies
-users_top = [[]]
-for i in most_rated_movies:
-    users_top.append([ratings.loc[ratings['movie_id'] == i]['user_id']])
-user_tops = np.array([users_top])
+top_users = df.groupby('user_id').size().sort_values(ascending=False)[:497]
+
+#select randomly -> active_users and training_users - pd.Series()
+active_users = top_users.sample(frac=(50/497.0))
+training_users = top_users.drop(active_users.index)
+#Make feature vectors for training users 
+#tu_data - DataFrame(), Get deyails of the users which are in training_users
+tu_data = df.loc[df['user_id'].isin(training_users)]
+#Get age of all users which are in  tu_data
+tu_age = tu_data['age']
+tu_ages = tu_age.drop_duplicates()
+#Apply fuzzy logic to age feature.
+age_columns = ['age_young', 'age_middle', 'age_old']
+tu_fuzzy_ages = pd.DataFrame(columns=age_columns)
+a = Age()
+j=0
+for i in tu_ages:
+    x =  [a.young(i), a.middle(i), a.old(i)]
+    tu_fuzzy_ages.loc[j] = x
+    j = j+1
+print tu_fuzzy_ages
 
 #Implementing fuzzy sets: class Age and GIM
 #GIM = Genre Interestingness Measure
 #Use young(), middle(), old() of Age class
 #Use very_bad(), bad(), average(), good(), very_good(), excellent() of GIM class
 #Make an object of Age and GIM classes
-a = Age()
 g = GIM()
 #Examples of Age and GIM fuzzy sets
 print 'GIM Example for value gim = 3.5:', g.very_bad(3.5), g.bad(3.5), g.average(3.5), g.good(3.5), g.very_good(3.5), g.excellent(3.5) 
